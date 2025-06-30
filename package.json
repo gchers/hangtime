@@ -16,12 +16,21 @@
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "format:check": "prettier --list-different src/"
+    "format:check": "prettier --list-different src/",
+    "ios:build": "npm run build && npx cap sync ios",
+    "ios:open": "npx cap open ios",
+    "ios:run": "npx cap run ios",
+    "ios:sync": "npx cap sync ios"
   },
   "dependencies": {
+    "@capacitor-community/bluetooth-le": "^7.1.1",
+    "@capacitor/cli": "^7.4.0",
+    "@capacitor/core": "^7.4.0",
+    "@capacitor/ios": "^7.4.0",
     "@fontsource/roboto": "^5.2.6",
     "@googlemaps/js-api-loader": "^1.16.8",
     "@hangtime/grip-connect": "^0.8.3",
+    "@hangtime/grip-connect-capacitor": "^0.8.3",
     "@mdi/js": "^7.4.47",
     "@unhead/vue": "^2.0.10",
     "@vueuse/components": "^13.4.0",
