@@ -4,8 +4,10 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Workout } from '@/models/workout.model'
 import { useBluetooth } from '@/composables/useBluetooth'
+import { usePlatform } from '@/composables/usePlatform'
 import { useBluetoothStore } from '@/stores/bluetooth.store'
 
+// Web Bluetooth imports
 import {
   Climbro,
   Entralpi,
@@ -16,15 +18,24 @@ import {
   Progressor
 } from '@hangtime/grip-connect'
 
+// Capacitor Bluetooth imports
+import {
+  Climbro as Climbro_Capacitor,
+  Entralpi as Entralpi_Capacitor,
+  ForceBoard as ForceBoard_Capacitor,
+  Motherboard as Motherboard_Capacitor,
+  WHC06 as WHC06_Capacitor,
+  mySmartBoard as mySmartBoard_Capacitor,
+  Progressor as Progressor_Capacitor
+} from '@hangtime/grip-connect-capacitor'
+
 const workout = defineModel<Workout>({ required: true })
 
 const bluetoothStore = useBluetoothStore()
-
 const { connect } = useBluetoothStore()
-
 const { bluetoothDevice, bluetoothError } = storeToRefs(bluetoothStore)
-
 const { isBluetoothSupported, isBluetoothAvailable } = useBluetooth()
+const { isNative } = usePlatform()
 
 const { size = 'default' } = defineProps<{
   size?: string
@@ -69,7 +80,16 @@ const dropdown = ref(workout.value?.company === 1 ? 'Motherboard' : 'Progressor'
 const dialog = ref(false)
 
 const setup = () => {
-  const selectedDeviceClass = {
+  // Get the appropriate device classes based on platform
+  const deviceClasses = isNative() ? {
+    Climbro: Climbro_Capacitor,
+    Entralpi: Entralpi_Capacitor,
+    ForceBoard: ForceBoard_Capacitor,
+    Motherboard: Motherboard_Capacitor,
+    mySmartBoard: mySmartBoard_Capacitor,
+    Progressor: Progressor_Capacitor,
+    WHC06: WHC06_Capacitor
+  } : {
     Climbro: Climbro,
     Entralpi: Entralpi,
     ForceBoard: ForceBoard,
@@ -77,20 +97,17 @@ const setup = () => {
     mySmartBoard: mySmartBoard,
     Progressor: Progressor,
     WHC06: WHC06
-  }[dropdown.value]
+  }
 
-  if (!selectedDeviceClass) return
-
-  const selectedDevice = new selectedDeviceClass()
-
-  bluetoothDevice.value = selectedDevice
-
-  connect(() => {
-    // Close Dialog
-    dialog.value = false
-    // Start workout
-    emit('start')
-  })
+  const selectedDeviceClass = deviceClasses[dropdown.value as keyof typeof deviceClasses]
+  
+  if (selectedDeviceClass) {
+    bluetoothDevice.value = new selectedDeviceClass()
+    connect(() => {
+      dialog.value = false
+      emit('start')
+    })
+  }
 }
 
 const reset = () => {

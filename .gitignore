@@ -35,4 +35,19 @@ blob-report/
 e2e/.cache/
 e2e/.auth/
 
+# Capacitor
+ios/App/Pods/
+ios/App/build/
+ios/App/DerivedData/
+ios/App/App/public/
+android/app/build/
+android/build/
+android/.gradle/
+
+# iOS
+*.xcarchive
+*.ipa
+*.dSYM.zip
+*.dSYM
+
 
