@@ -17,9 +17,13 @@ const showNotification = (newNotification: NotificationPayload) => {
 }
 
 onMounted(() => {
-  onMessage(messaging, (payload) => {
-    showNotification(payload.notification as NotificationPayload)
-  })
+  try {
+    onMessage(messaging, (payload) => {
+      showNotification(payload.notification as NotificationPayload)
+    })
+  } catch (error) {
+    console.warn('Firebase messaging not available:', error)
+  }
 
   oniOSMessage((payload: NotificationPayload) => {
     showNotification(payload)

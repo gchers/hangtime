@@ -4,6 +4,12 @@ const config: CapacitorConfig = {
   appId: 'com.hangtime.app',
   appName: 'HangTime',
   webDir: 'dist',
+  server: {
+    androidScheme: 'https'
+  },
+  ios: {
+    scheme: 'App'
+  },
   plugins: {
     BluetoothLe: {
       displayStrings: {

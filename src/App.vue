@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /// <reference types="digital-goods-browser" />
-import { watch } from 'vue'
+import { watch, onMounted } from 'vue'
 import { useTheme } from 'vuetify'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
@@ -17,6 +17,14 @@ import InAppNotification from '@/components/molecules/dialog/InAppNotification/I
 
 import { useAuthenticationStore } from '@/stores/authentication.store'
 import { Theme } from '@/enums/theme'
+import { Capacitor } from '@capacitor/core'
+
+// Add debug logging for iOS
+onMounted(() => {
+  console.log('App.vue mounted successfully')
+  console.log('Platform:', Capacitor.getPlatform())
+  console.log('Native platform:', Capacitor.isNativePlatform())
+})
 
 // router
 const route = useRoute()
